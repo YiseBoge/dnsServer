@@ -1,7 +1,5 @@
-# Server configurations
-parent:
-  address: "localhost"
-  port: "8080"
-
 server:
-  port: "8080"
+  port: "4040"
+parent:
+  address: localhost
+  port: "4041"

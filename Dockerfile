@@ -3,8 +3,6 @@ RUN mkdir src/dnsServer
 ADD . src/dnsServer
 WORKDIR src/dnsServer
 
-#RUN chmod 4777 /go/src/
-
 RUN go get "gopkg.in/yaml.v2"
 RUN go get "github.com/jinzhu/gorm"
 RUN go get "github.com/jinzhu/gorm/dialects/sqlite"

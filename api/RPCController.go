@@ -13,12 +13,12 @@ import (
 type API int
 
 func Serve() {
-	//serverPort := config.LoadConfig().Server.Port
-	serverPort := "4040"
+	serverPort := config.LoadConfig().Server.Port
+
 	api := new(API)
 	err := rpc.Register(api)
 	if err != nil {
-		log.Fatal("error registering API", err)
+		log.Fatal("Error Registering API", err)
 	}
 
 	rpc.HandleHTTP()
@@ -26,13 +26,13 @@ func Serve() {
 	listener, err := net.Listen("tcp", ":"+serverPort)
 
 	if err != nil {
-		log.Fatal("Listener error", err)
+		log.Fatal("Listener Error", err)
 	}
-	log.Printf("serving rpc on port %d", 4040)
+	log.Printf("Serving RPC on port %s", serverPort)
 	err = http.Serve(listener, nil)
 
 	if err != nil {
-		log.Fatal("error serving: ", err)
+		log.Fatal("Error Serving: ", err)
 	}
 }
 
@@ -44,7 +44,7 @@ func ParentClient() *rpc.Client {
 	return client
 }
 
-func (a *API) FindAll(empty string, result *[]models.DomainName) error {
+func (a *API) FindAll(_ string, result *[]models.DomainName) error {
 	fmt.Println("called find all")
 	domains := models.DomainName{}.FindAll()
 	*result = domains
