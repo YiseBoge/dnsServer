@@ -25,9 +25,9 @@ func CreateDomainName(model DomainName) {
 	defer database.Close()
 }
 
-func UpdateDomainName(model DomainName) {
+func (model *DomainName) UpdateDomainName() {
 	database := db.GetOpenDatabase()
-	database.Model(&model).Update(&model)
+	database.Model(model).Update(model)
 	defer database.Close()
 }
 
@@ -63,11 +63,10 @@ func DomainNamesByAddress(address string) []DomainName {
 	return models
 }
 
-func DeleteDomainName(model DomainName) DomainName {
+func (model *DomainName) DeleteDomainName() {
 	database := db.GetOpenDatabase()
-	database.Delete(&model)
+	database.Delete(model)
 	defer database.Close()
-	return model
 }
 
 func MigrateDomainName() {

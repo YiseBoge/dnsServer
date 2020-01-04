@@ -1,20 +1,21 @@
 package main
 
 import (
+	"dnsServer/api"
 	"dnsServer/config"
-	"dnsServer/models"
-	"fmt"
 )
 
 func main() {
 	config.Start()
+	api.Setup()
 	//a := config.LoadConfig()
 
-	fmt.Println("Start")
+	//fmt.Println("Start")
 
-	var domain = models.DomainName{Name: "www.google.com", Address: "8.8.8.10"}
-	models.CreateDomainName(domain)
-	fmt.Println(models.DomainNamesByName("www.google.com"))
+	//var domain = models.DomainNameById(6)
+	//domain.Name = "trial Name"
+	//domain.UpdateDomainName()
+	//fmt.Println(models.DomainNamesByName("www.google.com"))
 
 	//var domain1 = models.DomainNameById(0)
 	//fmt.Println(domain1)
@@ -35,6 +36,6 @@ func main() {
 	//models.CreateDomainName(domain2)
 	//fmt.Println(domain2)
 
-	fmt.Println("End")
+	//fmt.Println("End")
 
 }
