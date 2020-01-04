@@ -2,6 +2,7 @@ package models
 
 import (
 	"dnsServer/db"
+	"fmt"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"time"
@@ -15,23 +16,23 @@ type DomainName struct {
 	LastRead time.Time
 }
 
-func CreateDomainName(model DomainName) {
+func (model *DomainName) Save() {
 	database := db.GetOpenDatabase()
+
 	var prev DomainName
 	database.Where("name = ? AND address = ?", model.Name, model.Address).First(&prev)
-	if prev.ID <= 0 {
-		database.Save(&model)
+	model.LastRead = time.Now()
+	if model.ID == 0 && prev.ID == 0 {
+		fmt.Println(model.ID)
+		database.Create(model)
+	} else if model.ID > 0 {
+		database.First(&prev, model.ID)
+		database.Model(&prev).Update(model)
 	}
 	defer database.Close()
 }
 
-func (model *DomainName) UpdateDomainName() {
-	database := db.GetOpenDatabase()
-	database.Model(model).Update(model)
-	defer database.Close()
-}
-
-func AllDomainNames() []DomainName {
+func (DomainName) FindAll() []DomainName {
 	var models []DomainName
 	database := db.GetOpenDatabase()
 	database.Find(&models)
@@ -39,7 +40,7 @@ func AllDomainNames() []DomainName {
 	return models
 }
 
-func DomainNameById(id int) DomainName {
+func (DomainName) FindById(id int) DomainName {
 	var model DomainName
 	database := db.GetOpenDatabase()
 	database.First(&model, id)
@@ -47,7 +48,7 @@ func DomainNameById(id int) DomainName {
 	return model
 }
 
-func DomainNamesByName(name string) []DomainName {
+func (DomainName) FindByName(name string) []DomainName {
 	var models []DomainName
 	database := db.GetOpenDatabase()
 	database.Find(&models, "name = ?", name)
@@ -55,7 +56,7 @@ func DomainNamesByName(name string) []DomainName {
 	return models
 }
 
-func DomainNamesByAddress(address string) []DomainName {
+func (DomainName) FindByAddress(address string) []DomainName {
 	var models []DomainName
 	database := db.GetOpenDatabase()
 	database.Find(&models, "address = ?", address)
@@ -63,13 +64,13 @@ func DomainNamesByAddress(address string) []DomainName {
 	return models
 }
 
-func (model *DomainName) DeleteDomainName() {
+func (model *DomainName) Delete() {
 	database := db.GetOpenDatabase()
 	database.Delete(model)
 	defer database.Close()
 }
 
-func MigrateDomainName() {
+func (DomainName) Migrate() {
 	database := db.GetOpenDatabase()
 	database.AutoMigrate(&DomainName{})
 	defer database.Close()

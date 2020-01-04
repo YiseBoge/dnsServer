@@ -3,11 +3,24 @@ package main
 import (
 	"dnsServer/api"
 	"dnsServer/config"
+	"dnsServer/models"
+	"fmt"
 )
 
+//var database []models.DomainName
+
+//func (a *API) GetDB(empty string, reply *[]models.DomainName) error {
+//	database = append(database, models.DomainName{Name: "www.apple.com", Address: "8.8.8.8"})
+//	*reply = database
+//	return nil
+//}
+
 func main() {
+	fmt.Println(models.DomainName{}.FindByName("www.google.com"))
 	config.Start()
-	api.Setup()
+	api.Serve()
+
+	//fmt.Println(models.DomainName{}.FindByName("www.google.com"))
 	//a := config.LoadConfig()
 
 	//fmt.Println("Start")
@@ -32,10 +45,14 @@ func main() {
 	//models.DeleteDomainName(domain1)
 	//fmt.Println(models.AllDomainNames())
 
-	//var domain2 = models.DomainName{Name: "www.apple.com", Address:"1.2.3.4"}
-	//models.CreateDomainName(domain2)
-	//fmt.Println(domain2)
+	//var domain2 = models.DomainName{Name: "www.apple.com", Address:"8.8.8.8"}
+	//var domain2 = models.DomainName{}.FindById(30)
+	//if domain2.ID > 0{
+	//	domain2.Address = "1.2.3.4"
+	//	domain2.Save()
+	//}
 
+	//fmt.Println(models.DomainName{}.FindAll())
 	//fmt.Println("End")
 
 }
