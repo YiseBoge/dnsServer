@@ -3,8 +3,6 @@ package main
 import (
 	"dnsServer/api"
 	"dnsServer/config"
-	"dnsServer/models"
-	"fmt"
 )
 
 //var database []models.DomainName
@@ -16,7 +14,6 @@ import (
 //}
 
 func main() {
-	fmt.Println(models.DomainName{}.FindByName("www.google.com"))
 	config.Start()
 	api.Serve()
 
