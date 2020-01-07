@@ -4,6 +4,7 @@ ADD . src/dnsServer
 WORKDIR src/dnsServer
 
 RUN go get "gopkg.in/yaml.v2"
+RUN go get "github.com/jasonlvhit/gocron"
 RUN go get "github.com/jinzhu/gorm"
 RUN go get "github.com/jinzhu/gorm/dialects/sqlite"
 

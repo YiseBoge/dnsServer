@@ -14,6 +14,8 @@ import (
 
 type API int
 
+var ChildrenNodes []models.ServerNode
+
 func Serve() {
 	serverPort := config.LoadConfig().Server.Port
 
@@ -35,34 +37,6 @@ func Serve() {
 
 	if err != nil {
 		log.Fatal("Error Serving: ", err)
-	}
-}
-
-func ParentClient() *rpc.Client {
-	parentAddress := config.LoadConfig().Parent.Address
-	parentPort := config.LoadConfig().Parent.Port
-
-	client, err := rpc.DialHTTP("tcp", parentAddress+":"+parentPort)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return client
-}
-
-func GetMyDescriptor() string {
-	val := config.LoadConfig().Server.Descriptor
-
-	if val == "." {
-		return ""
-	} else {
-		client := ParentClient()
-		var r string
-		err := client.Call("API.GetDescriptor", "", &r)
-		if err != nil {
-			log.Println("Could not get parent descriptor")
-			r = ""
-		}
-		return "." + val + r
 	}
 }
 
@@ -116,13 +90,31 @@ func (a *API) Lookup(name string, result *[]models.DomainName) error {
 
 	} else {
 		if strings.HasSuffix(name, descriptor) {
-			localDatabase := db.GetOpenDatabase()
-			localResults := models.DomainName{}.FindByName(localDatabase, name)
+			foundChild := false
+			for _, node := range ChildrenNodes {
+				if strings.HasSuffix(name, node.Descriptor) {
+					client := GetClient(node)
+					var r []models.DomainName
+					err := client.Call("API.Lookup", name, &r)
+					if err != nil {
+						return err
+					}
+					log.Println("Using Child Server...")
+					*result = r
+					models.DomainName{}.SaveAll(cacheDatabase, r)
+					foundChild = true
+					break
+				}
+			}
 
-			*result = localResults
-			log.Println("Using Local Database...")
-			defer localDatabase.Close()
+			if !foundChild {
+				localDatabase := db.GetOpenDatabase()
+				localResults := models.DomainName{}.FindByName(localDatabase, name)
 
+				*result = localResults
+				log.Println("Using Local Database...")
+				defer localDatabase.Close()
+			}
 		} else {
 			client := ParentClient()
 			var r []models.DomainName
@@ -132,6 +124,7 @@ func (a *API) Lookup(name string, result *[]models.DomainName) error {
 			}
 			log.Println("Using Parent Server...")
 			*result = r
+			models.DomainName{}.SaveAll(cacheDatabase, r)
 		}
 	}
 
@@ -149,5 +142,15 @@ func (a *API) FindByName(name string, result *[]models.DomainName) error {
 	defer database.Close()
 
 	log.Println("______Find By Name Returning")
+	return nil
+}
+
+func (a *API) RegisterChild(child models.ServerNode, result *bool) error {
+	log.Println("Register Child Called______")
+
+	ChildrenNodes = append(ChildrenNodes, child)
+	*result = true
+
+	log.Println("______Register Child Returning")
 	return nil
 }

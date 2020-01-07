@@ -16,6 +16,7 @@ type Config struct {
 		Address string `yaml:"address"`
 		Port    string `yaml:"port"`
 	} `yaml:"parent"`
+	Timeout int `yaml:"timeout"`
 }
 
 func LoadConfig() Config {

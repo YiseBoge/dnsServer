@@ -27,40 +27,41 @@ func (model *DomainName) Save(database *gorm.DB) {
 		database.First(&prev, model.ID)
 		database.Model(&prev).Update(model)
 	}
-	//defer database.Close()
+}
+
+func (DomainName) SaveAll(database *gorm.DB, domainNames []DomainName) {
+	for _, domainName := range domainNames {
+		d := DomainName{Name: domainName.Address, Address: domainName.Address}
+		d.Save(database)
+	}
 }
 
 func (DomainName) FindAll(database *gorm.DB) []DomainName {
 	var models []DomainName
 	database.Find(&models)
-	//defer database.Close()
 	return models
 }
 
 func (DomainName) FindById(database *gorm.DB, id int) DomainName {
 	var model DomainName
 	database.First(&model, id)
-	//defer database.Close()
 	return model
 }
 
 func (DomainName) FindByName(database *gorm.DB, name string) []DomainName {
 	var models []DomainName
 	database.Find(&models, "name = ?", name)
-	//defer database.Close()
 	return models
 }
 
 func (DomainName) FindByAddress(database *gorm.DB, address string) []DomainName {
 	var models []DomainName
 	database.Find(&models, "address = ?", address)
-	//defer database.Close()
 	return models
 }
 
 func (model *DomainName) Delete(database *gorm.DB) {
 	database.Delete(model)
-	//defer database.Close()
 }
 
 func (DomainName) Migrate() {

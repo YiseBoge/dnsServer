@@ -3,13 +3,17 @@ package main
 import (
 	"dnsServer/api"
 	"dnsServer/config"
+	"dnsServer/db"
 	"fmt"
+	"github.com/jasonlvhit/gocron"
 	"log"
 	"regexp"
 	"time"
 )
 
 func main() {
+	//fmt.Println(api.GetMyIP())
+	//return
 	config.Start()
 	fmt.Println("Welcome to the DomaInator server.")
 	configuration := config.LoadConfig()
@@ -85,6 +89,8 @@ func main() {
 
 	config.SaveConfig(configuration)
 	log.Printf("Parent set to: %s", configuration.Parent)
+	api.InformParent()
+	gocron.Every(uint64(configuration.Timeout)).Hour().Do(db.ClearTimedOut)
 	go api.Serve()
 
 	time.Sleep(1 * time.Second)
