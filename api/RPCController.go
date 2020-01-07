@@ -89,14 +89,14 @@ func (a *API) GetDescriptor(_ string, result *string) error {
 }
 
 func (a *API) FindAll(_ string, result *[]models.DomainName) error {
-	fmt.Println("Find All Returning______")
+	log.Println("Find All Returning______")
 
 	database := db.GetOpenDatabase()
 	domains := models.DomainName{}.FindAll(database)
 	*result = domains
 	defer database.Close()
 
-	fmt.Println("______Find All Returning")
+	log.Println("______Find All Returning")
 	return nil
 }
 
