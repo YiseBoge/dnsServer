@@ -1,5 +1,6 @@
 server:
   port: "4040"
+  descriptor: .
 parent:
   address: localhost
-  port: "4041"
+  port: "0"

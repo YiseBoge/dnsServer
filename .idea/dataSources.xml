@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="dns_database.db" uuid="c82a7a7e-0ebb-4910-86c2-7b1cdc488d6d">
+    <data-source source="LOCAL" name="dns_database.db" uuid="efffee71-a9a5-4fe3-a9ac-6eeb302c9e07">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/data/dns_database.db</jdbc-url>
+      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/db/dns_database.db</jdbc-url>
+    </data-source>
+    <data-source source="LOCAL" name="cache_dns_database.db" uuid="febb8a47-68a1-4195-8c18-872bad01dede">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/db/cache_dns_database.db</jdbc-url>
     </data-source>
   </component>
 </project>

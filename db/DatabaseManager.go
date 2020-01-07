@@ -14,3 +14,12 @@ func GetOpenDatabase() *gorm.DB {
 	}
 	return db
 }
+
+func GetOpenCacheDatabase() *gorm.DB {
+	workingDirectory, _ := os.Getwd()
+	db, err := gorm.Open("sqlite3", workingDirectory+"/db/cache_dns_database.db")
+	if err != nil {
+		panic("failed to connect database")
+	}
+	return db
+}

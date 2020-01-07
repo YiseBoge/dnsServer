@@ -16,9 +16,7 @@ type DomainName struct {
 	LastRead time.Time
 }
 
-func (model *DomainName) Save() {
-	database := db.GetOpenDatabase()
-
+func (model *DomainName) Save(database *gorm.DB) {
 	var prev DomainName
 	database.Where("name = ? AND address = ?", model.Name, model.Address).First(&prev)
 	model.LastRead = time.Now()
@@ -29,49 +27,49 @@ func (model *DomainName) Save() {
 		database.First(&prev, model.ID)
 		database.Model(&prev).Update(model)
 	}
-	defer database.Close()
+	//defer database.Close()
 }
 
-func (DomainName) FindAll() []DomainName {
+func (DomainName) FindAll(database *gorm.DB) []DomainName {
 	var models []DomainName
-	database := db.GetOpenDatabase()
 	database.Find(&models)
-	defer database.Close()
+	//defer database.Close()
 	return models
 }
 
-func (DomainName) FindById(id int) DomainName {
+func (DomainName) FindById(database *gorm.DB, id int) DomainName {
 	var model DomainName
-	database := db.GetOpenDatabase()
 	database.First(&model, id)
-	defer database.Close()
+	//defer database.Close()
 	return model
 }
 
-func (DomainName) FindByName(name string) []DomainName {
+func (DomainName) FindByName(database *gorm.DB, name string) []DomainName {
 	var models []DomainName
-	database := db.GetOpenDatabase()
 	database.Find(&models, "name = ?", name)
-	defer database.Close()
+	//defer database.Close()
 	return models
 }
 
-func (DomainName) FindByAddress(address string) []DomainName {
+func (DomainName) FindByAddress(database *gorm.DB, address string) []DomainName {
 	var models []DomainName
-	database := db.GetOpenDatabase()
 	database.Find(&models, "address = ?", address)
-	defer database.Close()
+	//defer database.Close()
 	return models
 }
 
-func (model *DomainName) Delete() {
-	database := db.GetOpenDatabase()
+func (model *DomainName) Delete(database *gorm.DB) {
 	database.Delete(model)
-	defer database.Close()
+	//defer database.Close()
 }
 
 func (DomainName) Migrate() {
 	database := db.GetOpenDatabase()
+	cacheDatabase := db.GetOpenCacheDatabase()
+
 	database.AutoMigrate(&DomainName{})
+	cacheDatabase.AutoMigrate(&DomainName{})
+
 	defer database.Close()
+	defer cacheDatabase.Close()
 }
