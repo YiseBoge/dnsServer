@@ -1,7 +1,7 @@
 server:
   port: "4040"
-  descriptor: com
+  descriptor: .
 parent:
   address: localhost
-  port: "4041"
+  port: "0"
 timeout: 24

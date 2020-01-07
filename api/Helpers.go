@@ -51,6 +51,10 @@ func InformParent() {
 	port := config.LoadConfig().Server.Port
 	descriptor := GetMyDescriptor()
 
+	if descriptor == "" {
+		return
+	}
+
 	self := models.ServerNode{Address: address, Port: port, Descriptor: descriptor}
 	var res bool
 	client := ParentClient()

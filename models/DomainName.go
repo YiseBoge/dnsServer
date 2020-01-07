@@ -74,3 +74,15 @@ func (DomainName) Migrate() {
 	defer database.Close()
 	defer cacheDatabase.Close()
 }
+
+func ClearTimedOut(timeout int) {
+	database := db.GetOpenCacheDatabase()
+	all := DomainName{}.FindAll(database)
+	for _, domain := range all {
+		difference := int(time.Now().Sub(domain.LastRead).Hours())
+		if difference > timeout {
+			domain.Delete(database)
+		}
+	}
+	database.Close()
+}

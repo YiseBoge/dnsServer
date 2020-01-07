@@ -3,7 +3,7 @@ package main
 import (
 	"dnsServer/api"
 	"dnsServer/config"
-	"dnsServer/db"
+	"dnsServer/models"
 	"fmt"
 	"github.com/jasonlvhit/gocron"
 	"log"
@@ -90,7 +90,7 @@ func main() {
 	config.SaveConfig(configuration)
 	log.Printf("Parent set to: %s", configuration.Parent)
 	api.InformParent()
-	gocron.Every(uint64(configuration.Timeout)).Hour().Do(db.ClearTimedOut)
+	gocron.Every(uint64(configuration.Timeout)).Hours().Do(models.ClearTimedOut, configuration.Timeout)
 	go api.Serve()
 
 	time.Sleep(1 * time.Second)

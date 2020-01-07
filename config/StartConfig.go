@@ -1,6 +1,8 @@
 package config
 
-import "dnsServer/models"
+import (
+	"dnsServer/models"
+)
 
 func Start() {
 	models.DomainName{}.Migrate()
