@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	"log"
 	"time"
 )
 
@@ -26,12 +27,14 @@ func (model *DomainName) Save(database *gorm.DB) {
 	} else if model.ID > 0 {
 		database.First(&prev, model.ID)
 		database.Model(&prev).Update(model)
+	} else if prev.ID > 0 {
+		database.Model(&prev).Update(model)
 	}
 }
 
 func (DomainName) SaveAll(database *gorm.DB, domainNames []DomainName) {
 	for _, domainName := range domainNames {
-		d := DomainName{Name: domainName.Address, Address: domainName.Address}
+		d := DomainName{Name: domainName.Name, Address: domainName.Address}
 		d.Save(database)
 	}
 }
@@ -76,13 +79,18 @@ func (DomainName) Migrate() {
 }
 
 func ClearTimedOut(timeout int) {
+	log.Println("Clearing unused cache...")
 	database := db.GetOpenCacheDatabase()
 	all := DomainName{}.FindAll(database)
+	counter := 0
 	for _, domain := range all {
 		difference := int(time.Now().Sub(domain.LastRead).Hours())
+		fmt.Println("time left", difference)
 		if difference > timeout {
 			domain.Delete(database)
+			counter += 1
 		}
 	}
 	database.Close()
+	log.Printf("Cache cleanup complete on %d items", counter)
 }

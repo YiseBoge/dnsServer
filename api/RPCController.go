@@ -84,8 +84,9 @@ func (a *API) Lookup(name string, result *[]models.DomainName) error {
 	cacheResults := models.DomainName{}.FindByName(cacheDatabase, name)
 
 	if len(cacheResults) > 0 {
-		*result = cacheResults
 		log.Println("Using Cache...")
+		*result = cacheResults
+		models.DomainName{}.SaveAll(cacheDatabase, cacheResults)
 		defer cacheDatabase.Close()
 
 	} else {
@@ -101,7 +102,10 @@ func (a *API) Lookup(name string, result *[]models.DomainName) error {
 					}
 					log.Println("Using Child Server...")
 					*result = r
-					models.DomainName{}.SaveAll(cacheDatabase, r)
+					if len(r) > 0 {
+						log.Println("Saving to Cache...")
+						models.DomainName{}.SaveAll(cacheDatabase, r)
+					}
 					foundChild = true
 					break
 				}
@@ -110,8 +114,8 @@ func (a *API) Lookup(name string, result *[]models.DomainName) error {
 			if !foundChild {
 				localDatabase := db.GetOpenDatabase()
 				localResults := models.DomainName{}.FindByName(localDatabase, name)
-
 				*result = localResults
+				models.DomainName{}.SaveAll(localDatabase, localResults)
 				log.Println("Using Local Database...")
 				defer localDatabase.Close()
 			}
@@ -124,7 +128,10 @@ func (a *API) Lookup(name string, result *[]models.DomainName) error {
 			}
 			log.Println("Using Parent Server...")
 			*result = r
-			models.DomainName{}.SaveAll(cacheDatabase, r)
+			if len(r) > 0 {
+				log.Println("Saving to Cache...")
+				models.DomainName{}.SaveAll(cacheDatabase, r)
+			}
 		}
 	}
 

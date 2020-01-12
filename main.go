@@ -5,7 +5,7 @@ import (
 	"dnsServer/config"
 	"dnsServer/models"
 	"fmt"
-	"github.com/jasonlvhit/gocron"
+	"gopkg.in/robfig/cron.v3"
 	"log"
 	"regexp"
 	"time"
@@ -90,7 +90,14 @@ func main() {
 	config.SaveConfig(configuration)
 	log.Printf("Parent set to: %s", configuration.Parent)
 	api.InformParent()
-	gocron.Every(uint64(configuration.Timeout)).Hours().Do(models.ClearTimedOut, configuration.Timeout)
+
+	c := cron.New(cron.WithSeconds())
+	timeString := fmt.Sprintf("@every %dh", configuration.Timeout)
+	_, _ = c.AddFunc(timeString, func() {
+		models.ClearTimedOut(configuration.Timeout)
+	})
+	c.Start()
+
 	go api.Serve()
 
 	time.Sleep(1 * time.Second)
@@ -106,4 +113,8 @@ func main() {
 		log.Printf("**Bad input, Please try again**")
 	}
 
+}
+
+func printer(i int) {
+	fmt.Println("trial", i)
 }
