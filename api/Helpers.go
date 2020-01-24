@@ -2,10 +2,12 @@ package api
 
 import (
 	"dnsServer/config"
+	"dnsServer/db"
 	"dnsServer/models"
 	"log"
 	"net"
 	"net/rpc"
+	"strings"
 )
 
 func GetClient(node models.ServerNode) *rpc.Client {
@@ -76,5 +78,22 @@ func GetMyIP() string {
 			}
 		}
 	}
-	return ""
+	return "localhost"
+}
+
+func MoveUnfittingData(client *rpc.Client) {
+	descriptor := GetMyDescriptor()
+	database := db.GetOpenDatabase()
+	domains := models.DomainName{}.FindAll(database)
+	var result bool
+
+	for _, domain := range domains {
+		if !strings.HasSuffix(domain.Name, descriptor) {
+			err := client.Call("API.Register", domain, &result)
+			if err != nil {
+				log.Println(err)
+			}
+			domain.Delete(database)
+		}
+	}
 }

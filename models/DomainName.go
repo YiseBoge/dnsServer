@@ -10,7 +10,9 @@ import (
 )
 
 type DomainName struct {
-	gorm.Model
+	ID        uint `gorm:"primary_key"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
 
 	Name     string
 	Address  string
@@ -22,7 +24,6 @@ func (model *DomainName) Save(database *gorm.DB) {
 	database.Where("name = ? AND address = ?", model.Name, model.Address).First(&prev)
 	model.LastRead = time.Now()
 	if model.ID == 0 && prev.ID == 0 {
-		fmt.Println(model.ID)
 		database.Create(model)
 	} else if model.ID > 0 {
 		database.First(&prev, model.ID)
@@ -64,7 +65,7 @@ func (DomainName) FindByAddress(database *gorm.DB, address string) []DomainName 
 }
 
 func (model *DomainName) Delete(database *gorm.DB) {
-	database.Delete(model)
+	database.Where("name = ? AND address = ?", model.Name, model.Address).Delete(DomainName{})
 }
 
 func (DomainName) Migrate() {

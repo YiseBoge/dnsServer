@@ -88,8 +88,8 @@ func main() {
 	}
 
 	config.SaveConfig(configuration)
-	log.Printf("Parent set to: %s", configuration.Parent)
 	api.InformParent()
+	log.Printf("Parent set to: %s", configuration.Parent)
 
 	c := cron.New(cron.WithSeconds())
 	timeString := fmt.Sprintf("@every %dh", configuration.Timeout)
@@ -113,8 +113,4 @@ func main() {
 		log.Printf("**Bad input, Please try again**")
 	}
 
-}
-
-func printer(i int) {
-	fmt.Println("trial", i)
 }
