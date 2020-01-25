@@ -79,7 +79,7 @@ func InformManager() {
 
 	var res bool
 	client := GetClient(managerNode)
-	err := client.Call("API.RegisterChild", self, &res)
+	err := client.Call("API.RegisterServer", self, &res)
 	if err != nil {
 		log.Fatal("Could not register at the Server Manager")
 	}

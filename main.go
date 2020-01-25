@@ -8,6 +8,7 @@ import (
 	"gopkg.in/robfig/cron.v3"
 	"log"
 	"regexp"
+	"strconv"
 	"time"
 )
 
@@ -90,12 +91,12 @@ func main() {
 		log.Printf("Server Manager address = \"%s\" press 'Enter' to continue or provide new address:", configuration.Manager.Address)
 		_, _ = fmt.Scanln(&res5)
 
-		if res3 == "" {
+		if res5 == "" {
 			break
 		}
 
 		if domainRegex.MatchString(res5) || ipRegex.MatchString(res5) {
-			configuration.Parent.Address = res5
+			configuration.Manager.Address = res5
 			break
 		}
 		log.Printf("**Bad input, Please try again**")
@@ -106,12 +107,29 @@ func main() {
 		log.Printf("Server Manager port = \"%s\" press 'Enter' to continue or provide new port:", configuration.Manager.Port)
 		_, _ = fmt.Scanln(&res6)
 
-		if res4 == "" {
+		if res6 == "" {
 			break
 		}
 
 		if portRegex.MatchString(res6) {
-			configuration.Parent.Port = res6
+			configuration.Manager.Port = res6
+			break
+		}
+		log.Printf("**Bad input, Please try again**")
+	}
+
+	var res7 string
+	for true {
+		log.Printf("Timeout value = \"%d\" press 'Enter' to continue or provide new timeout:", configuration.Timeout)
+		_, _ = fmt.Scanln(&res7)
+
+		if res7 == "" {
+			break
+		}
+
+		v, err := strconv.Atoi(res7)
+		if err != nil {
+			configuration.Timeout = v
 			break
 		}
 		log.Printf("**Bad input, Please try again**")
