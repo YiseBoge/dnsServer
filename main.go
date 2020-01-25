@@ -128,7 +128,7 @@ func main() {
 		}
 
 		v, err := strconv.Atoi(res7)
-		if err != nil {
+		if err == nil {
 			configuration.Timeout = v
 			break
 		}
