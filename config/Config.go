@@ -16,6 +16,10 @@ type Config struct {
 		Address string `yaml:"address"`
 		Port    string `yaml:"port"`
 	} `yaml:"parent"`
+	Manager struct {
+		Address string `yaml:"address"`
+		Port    string `yaml:"port"`
+	} `yaml:"manager"`
 	Timeout int `yaml:"timeout"`
 }
 

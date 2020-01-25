@@ -304,7 +304,7 @@ func (a *API) RemoveChild(child models.ServerNode, result *bool) error {
 	return nil
 }
 
-func (a *API) SwitchParent(parent models.ServerModel, result *bool) error {
+func (a *API) SwitchParent(parent models.ServerNode, result *bool) error {
 	log.Println("Switch Parent Called______")
 
 	configuration := config.LoadConfig()
