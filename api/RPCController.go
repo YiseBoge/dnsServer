@@ -310,14 +310,17 @@ func (a *API) SwitchParent(parent models.ServerNode, result *bool) error {
 	log.Println("Switch Parent Called______")
 
 	configuration := config.LoadConfig()
+	log.Println(parent)
 	configuration.Parent.Address = parent.Address
 	configuration.Parent.Port = parent.Port
-	configuration.Server.FullDescriptor = "_"
 	config.SaveConfig(configuration)
 
 	InformParent()
 	MoveUnfittingData(ParentClient())
 	*result = true
+
+	configuration.Server.FullDescriptor = "_"
+	config.SaveConfig(configuration)
 
 	log.Println("______Switch Parent Returning")
 	return nil

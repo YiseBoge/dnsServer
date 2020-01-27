@@ -35,7 +35,7 @@ func main() {
 			configuration.Server.Port = res1
 			break
 		}
-		fmt.Printf("**Bad input, Please try again**")
+		fmt.Println("**Bad input, Please try again**")
 	}
 
 	var res2 string
@@ -51,7 +51,7 @@ func main() {
 			configuration.Server.Descriptor = res2
 			break
 		}
-		fmt.Printf("**Bad input, Please try again**")
+		fmt.Println("**Bad input, Please try again**")
 	}
 
 	var res3 string
@@ -67,7 +67,7 @@ func main() {
 			configuration.Parent.Address = res3
 			break
 		}
-		fmt.Printf("**Bad input, Please try again**")
+		fmt.Println("**Bad input, Please try again**")
 	}
 
 	var res4 string
@@ -83,7 +83,7 @@ func main() {
 			configuration.Parent.Port = res4
 			break
 		}
-		fmt.Printf("**Bad input, Please try again**")
+		fmt.Println("**Bad input, Please try again**")
 	}
 
 	var res5 string
@@ -99,7 +99,7 @@ func main() {
 			configuration.Manager.Address = res5
 			break
 		}
-		fmt.Printf("**Bad input, Please try again**")
+		fmt.Println("**Bad input, Please try again**")
 	}
 
 	var res6 string
@@ -115,7 +115,7 @@ func main() {
 			configuration.Manager.Port = res6
 			break
 		}
-		fmt.Printf("**Bad input, Please try again**")
+		fmt.Println("**Bad input, Please try again**")
 	}
 
 	var res7 string
@@ -132,7 +132,7 @@ func main() {
 			configuration.Timeout = v
 			break
 		}
-		fmt.Printf("**Bad input, Please try again**")
+		fmt.Println("**Bad input, Please try again**")
 	}
 
 	configuration.Server.FullDescriptor = "_"
