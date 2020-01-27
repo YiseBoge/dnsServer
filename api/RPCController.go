@@ -160,6 +160,7 @@ func (a *API) RegisterChild(child models.ServerNode, result *bool) error {
 	ChildrenNodes = append(ChildrenNodes, child)
 	MoveUnfittingData(GetClient(child))
 	*result = true
+	log.Println("New Child:", child)
 
 	log.Println("______Register Child Returning")
 	return nil
@@ -194,6 +195,13 @@ func (a *API) Register(domain models.DomainName, result *bool) error {
 			localDatabase := db.GetOpenDatabase()
 			domain.Save(localDatabase)
 			*result = true
+
+			localResults := models.DomainName{}.FindByName(localDatabase, name)
+			if len(localResults) > 1 {
+				for _, localResult := range localResults {
+					go ClearCache(localResult)
+				}
+			}
 			log.Println("Using Local Database...")
 			defer localDatabase.Close()
 		}
@@ -304,6 +312,7 @@ func (a *API) SwitchParent(parent models.ServerNode, result *bool) error {
 	configuration := config.LoadConfig()
 	configuration.Parent.Address = parent.Address
 	configuration.Parent.Port = parent.Port
+	configuration.Server.FullDescriptor = "_"
 	config.SaveConfig(configuration)
 
 	InformParent()

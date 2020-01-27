@@ -9,8 +9,9 @@ import (
 
 type Config struct {
 	Server struct {
-		Port       string `yaml:"port"`
-		Descriptor string `yaml:"descriptor"`
+		Port           string `yaml:"port"`
+		Descriptor     string `yaml:"descriptor"`
+		FullDescriptor string `yaml:"full_descriptor"`
 	} `yaml:"server"`
 	Parent struct {
 		Address string `yaml:"address"`

@@ -24,7 +24,7 @@ func main() {
 
 	var res1 string
 	for true {
-		fmt.Printf("Current port = \"%s\" press 'Enter' to continue or provide new port:", configuration.Server.Port)
+		fmt.Printf("Current port = \"%s\" press 'Enter' to continue or provide new port: ", configuration.Server.Port)
 		_, _ = fmt.Scanln(&res1)
 
 		if res1 == "" {
@@ -40,7 +40,7 @@ func main() {
 
 	var res2 string
 	for true {
-		fmt.Printf("Current descriptor = \"%s\" press 'Enter' to continue or provide new descriptor:", configuration.Server.Descriptor)
+		fmt.Printf("Current descriptor = \"%s\" press 'Enter' to continue or provide new descriptor: ", configuration.Server.Descriptor)
 		_, _ = fmt.Scanln(&res2)
 
 		if res2 == "" {
@@ -56,7 +56,7 @@ func main() {
 
 	var res3 string
 	for true {
-		fmt.Printf("Parent address = \"%s\" press 'Enter' to continue or provide new address:", configuration.Parent.Address)
+		fmt.Printf("Parent address = \"%s\" press 'Enter' to continue or provide new address: ", configuration.Parent.Address)
 		_, _ = fmt.Scanln(&res3)
 
 		if res3 == "" {
@@ -72,7 +72,7 @@ func main() {
 
 	var res4 string
 	for true {
-		fmt.Printf("Parent port = \"%s\" press 'Enter' to continue or provide new port:", configuration.Parent.Port)
+		fmt.Printf("Parent port = \"%s\" press 'Enter' to continue or provide new port: ", configuration.Parent.Port)
 		_, _ = fmt.Scanln(&res4)
 
 		if res4 == "" {
@@ -88,7 +88,7 @@ func main() {
 
 	var res5 string
 	for true {
-		fmt.Printf("Server Manager address = \"%s\" press 'Enter' to continue or provide new address:", configuration.Manager.Address)
+		fmt.Printf("Server Manager address = \"%s\" press 'Enter' to continue or provide new address: ", configuration.Manager.Address)
 		_, _ = fmt.Scanln(&res5)
 
 		if res5 == "" {
@@ -104,7 +104,7 @@ func main() {
 
 	var res6 string
 	for true {
-		fmt.Printf("Server Manager port = \"%s\" press 'Enter' to continue or provide new port:", configuration.Manager.Port)
+		fmt.Printf("Server Manager port = \"%s\" press 'Enter' to continue or provide new port: ", configuration.Manager.Port)
 		_, _ = fmt.Scanln(&res6)
 
 		if res6 == "" {
@@ -120,7 +120,7 @@ func main() {
 
 	var res7 string
 	for true {
-		fmt.Printf("Timeout value = \"%d\" press 'Enter' to continue or provide new timeout:", configuration.Timeout)
+		fmt.Printf("Timeout value = \"%d\" press 'Enter' to continue or provide new timeout: ", configuration.Timeout)
 		_, _ = fmt.Scanln(&res7)
 
 		if res7 == "" {
@@ -135,6 +135,7 @@ func main() {
 		fmt.Printf("**Bad input, Please try again**")
 	}
 
+	configuration.Server.FullDescriptor = "_"
 	config.SaveConfig(configuration)
 	go api.Serve()
 	api.InformParent()

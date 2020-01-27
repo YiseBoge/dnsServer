@@ -16,7 +16,7 @@ func GetClient(node models.ServerNode) *rpc.Client {
 	address := node.Address
 	port := node.Port
 
-	timeout := 5 * time.Second
+	timeout := 3 * time.Second
 	_, err := net.DialTimeout("tcp", address+":"+port, timeout)
 	if err != nil {
 		log.Fatal("Site unreachable, error: ", err)
@@ -37,10 +37,14 @@ func ParentClient() *rpc.Client {
 }
 
 func GetMyDescriptor() string {
-	val := config.LoadConfig().Server.Descriptor
+	d := config.LoadConfig()
+	val := d.Server.Descriptor
+	fullVal := d.Server.FullDescriptor
 
 	if val == "." {
 		return ""
+	} else if strings.Contains(fullVal, val) {
+		return fullVal
 	} else {
 		client := ParentClient()
 		var r string
@@ -49,6 +53,8 @@ func GetMyDescriptor() string {
 			log.Println("Could not get parent descriptor")
 			r = ""
 		}
+		d.Server.FullDescriptor = "." + val + r
+		config.SaveConfig(d)
 		return "." + val + r
 	}
 }
@@ -72,6 +78,7 @@ func InformParent() {
 	if err != nil {
 		log.Fatal("Could not register at the Parent")
 	}
+	MoveUnfittingData(client)
 }
 
 func InformManager() {
