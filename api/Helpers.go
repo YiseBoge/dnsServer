@@ -73,8 +73,10 @@ func InformManager() {
 	port := configuration.Server.Port
 	parentAddress := configuration.Parent.Address
 	parentPort := configuration.Parent.Port
+	managerAddress := configuration.Manager.Address
+	managerPort := configuration.Manager.Port
 
-	managerNode := models.ServerNode{Address: configuration.Manager.Address, Port: configuration.Manager.Port}
+	managerNode := models.ServerNode{Address: managerAddress, Port: managerPort}
 	self := models.ServerModel{Address: address, Port: port, ParentAddress: parentAddress, ParentPort: parentPort}
 
 	var res bool
@@ -86,18 +88,16 @@ func InformManager() {
 }
 
 func GetMyIP() string {
-	address, err := net.InterfaceAddrs()
+	conn, err := net.Dial("udp", "8.8.8.8:80")
 	if err != nil {
-		log.Fatal("Could not find my IP")
+		log.Fatal(err)
 	}
-	for _, a := range address {
-		if ipNet, ok := a.(*net.IPNet); ok && !ipNet.IP.IsLoopback() {
-			if ipNet.IP.To4() != nil {
-				return ipNet.IP.String()
-			}
-		}
-	}
-	return "localhost"
+	defer conn.Close()
+
+	localAddr := conn.LocalAddr().(*net.UDPAddr)
+
+	return localAddr.IP.String()
+
 }
 
 func MoveUnfittingData(client *rpc.Client) {
