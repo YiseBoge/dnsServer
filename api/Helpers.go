@@ -9,11 +9,18 @@ import (
 	"net"
 	"net/rpc"
 	"strings"
+	"time"
 )
 
 func GetClient(node models.ServerNode) *rpc.Client {
 	address := node.Address
 	port := node.Port
+
+	timeout := 5 * time.Second
+	_, err := net.DialTimeout("tcp", address+":"+port, timeout)
+	if err != nil {
+		log.Fatal("Site unreachable, error: ", err)
+	}
 
 	client, err := rpc.DialHTTP("tcp", address+":"+port)
 	if err != nil {
@@ -90,7 +97,7 @@ func InformManager() {
 func GetMyIP() string {
 	conn, err := net.Dial("udp", "8.8.8.8:80")
 	if err != nil {
-		log.Fatal(err)
+		return "localhost"
 	}
 	defer conn.Close()
 
@@ -119,4 +126,18 @@ func __MoveData(client *rpc.Client, domain models.DomainName, result bool, datab
 		log.Println(err)
 	}
 	domain.Delete(database)
+}
+
+func ClearCache(domain models.DomainName) {
+	configuration := config.LoadConfig()
+	managerAddress := configuration.Manager.Address
+	managerPort := configuration.Manager.Port
+	managerNode := models.ServerNode{Address: managerAddress, Port: managerPort}
+	client := GetClient(managerNode)
+
+	var result bool
+	err := client.Call("API.RemoveFromAllCache", domain, &result)
+	if err != nil {
+		log.Println(err)
+	}
 }

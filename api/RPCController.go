@@ -40,12 +40,12 @@ func Serve() {
 	}
 }
 
-func (a *API) Heartbeat(_ string, result *bool) error {
-	log.Println("Heartbeat Called______")
-	*result = true
-	log.Println("______Heartbeat Returning")
-	return nil
-}
+//func (a *API) Heartbeat(_ string, result *bool) error {
+//	log.Println("Heartbeat Called______")
+//	*result = true
+//	log.Println("______Heartbeat Returning")
+//	return nil
+//}
 
 func (a *API) GetDescriptor(_ string, result *string) error {
 	log.Println("Get Descriptor Called______")
@@ -246,6 +246,7 @@ func (a *API) Remove(domain models.DomainName, result *bool) error {
 
 		if !foundChild {
 			localDatabase := db.GetOpenDatabase()
+			go ClearCache(domain)
 			domain.Delete(localDatabase)
 			*result = true
 			log.Println("Using Local Database...")
