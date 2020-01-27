@@ -40,13 +40,6 @@ func Serve() {
 	}
 }
 
-//func (a *API) Heartbeat(_ string, result *bool) error {
-//	log.Println("Heartbeat Called______")
-//	*result = true
-//	log.Println("______Heartbeat Returning")
-//	return nil
-//}
-
 func (a *API) GetDescriptor(_ string, result *string) error {
 	log.Println("Get Descriptor Called______")
 
